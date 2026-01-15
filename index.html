@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Interactive Globe</title>
+
+  <!-- CesiumJS -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <!-- <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script> -->
+
+
+  <style>
+    html, body, #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    #globe-title {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-family: Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+        color: #333;
+        pointer-events: none;
+        z-index: 999;
+        text-align: left; 
+    }
+
+    #main-title {
+        font-size: 36px;
+        font-weight: 1000;
+        color: #333;
+    }
+
+    #subtitle-line {
+        width: 100%; /* or a shorter width if you like */
+        height: 1px;
+        background-color: rgba(128,128,128,0.3); /* faint thin gray line */
+        margin: 6px; /* space above/below the line */
+    }
+
+    #globe-subtitle {
+        font-size: 13px;
+        font-weight: 400;
+        color: #555;
+        line-height: 1.2;
+    }
+
+    #legend {
+        position: absolute;
+        bottom: 40px;
+        left: 20px;
+
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        background: transparent;
+        padding: 8px 12px;
+        border-radius: 999px; /* pill-style banner */
+
+        font-family: Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        font-weight: normal;
+    }
+
+    #legend-title {
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
+    .legend-color {
+         width: 12px;      
+        height: 20px;    
+        border-radius: 4px;   
+        /* width: 10px;
+        height: 10px;
+        border-radius: 50%; */
+    }
+    
+    .cesium-infoBox-toolbar {
+        display: none !important;
+    }
+
+    .cesium-infoBox {
+        background-color: rgb(255, 255, 255) !important; /* Default infobox background color */
+        color: #ffffff
+    }
+
+    button.cesium-infoBox-camera {
+        display: none;
+    }
+
+    button.cesium-infoBox-close {
+        display: none !important;
+    }
+
+    .cesium-infoBox-title {
+        font-family: 'Arial Black', sans-serif;  /* Change to your preferred font */
+        font-size: 16px;                          /* Adjust size */
+        color: #ffffff;                           /* Title color */
+        font-weight: bold;                         /* Optional bold */
+    }
+
+    .cesium-infoBox {
+        border-radius: 10px !important;
+        overflow: hidden !important; 
+        top: 20px !important;     
+        right: 50px !important;   
+        bottom: auto !important;  
+        left: auto !important;     
+        width: 250px !important;  
+        max-height: 500px !important; 
+        box-shadow: none !important;
+        border: 1px solid #ccc;
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <div id="cesiumContainer"></div> 
+
+  <div id="globe-title">
+    <div id="main-title">OGREs: Where are They?</div>
+    <div id="subtitle-line"></div>
+    <div id="globe-subtitle">Rotate or zoom around the world. Select a location to learn more about the project.</div>
+  </div>
+
+    <div id="legend"></div>
+
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>
