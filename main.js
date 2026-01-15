@@ -13,7 +13,7 @@ const viewer = new Cesium.Viewer("cesiumContainer", {
   homeButton: false,
   baseLayerPicker: false,
   fullscreenButton: false,       
-  creditContainer: null          
+  // creditContainer: "attribution-container"          
 });
 
 viewer.infoBox.frame.removeAttribute('sandbox');
@@ -23,7 +23,7 @@ viewer.imageryLayers.removeAll();
 viewer.imageryLayers.addImageryProvider(
   new Cesium.UrlTemplateImageryProvider({
     url: "https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}@2x.png",
-    credit: ''
+    credit: 'https://carto.com/basemaps under non commerical use'
   })
 );
 
@@ -31,7 +31,6 @@ viewer.imageryLayers.addImageryProvider(
 viewer.scene.globe.baseColor = Cesium.Color.fromCssColorString("#f1f1f1ff");
 // viewer.scene.globe.waterColor = Cesium.Color.fromCssColorString("#6bb9e6ff");
 viewer.scene.backgroundColor = Cesium.Color.fromCssColorString("#ffffffff");
-Cesium.Color.TRANSPARENT
 viewer.scene.globe.showGroundAtmosphere = false;
 viewer.scene.skyBox.show = false;
 viewer.scene.sun.show = false;
@@ -107,17 +106,35 @@ const MAX_SIZE = 20;
 // ----------------------
 // Load CSV (TAB-delimited)
 // ----------------------
-Papa.parse("data/points.csv", {
-  download: true,
-  header: true,
-  delimiter: ",",
-  skipEmptyLines: true,
-  complete: function (results) {
-    const points = results.data;
+const SHEET_URL =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQCrUJH-IyyRMocINP2zOII0z2EQPa8qhEBidLSr2mjoW-EY5iSqunaSD_ZklMjoas0z7aUPim3JOfb/pub?output=csv";
+
+fetch(SHEET_URL)
+  .then(res => res.text())
+  .then(csv => {
+    const parsed = Papa.parse(csv, {
+      header: true,
+      skipEmptyLines: true
+    });
+
+    const points = parsed.data;
     addPoints(points);
     buildLegend(points);
-  }
-});
+  })
+  .catch(err => console.error("Google Sheet load error:", err));
+
+
+// Papa.parse("data/points.csv", {
+//   download: true,
+//   header: true,
+//   delimiter: ",",
+//   skipEmptyLines: true,
+//   complete: function (results) {
+//     const points = results.data;
+//     addPoints(points);
+//     buildLegend(points);
+//   }
+// });
 
 // ----------------------
 // Add Points
@@ -163,36 +180,22 @@ function addPoints(points) {
     name: p["Location"],
     description: buildDescription(p)
     });
-
-
-//     viewer.entities.add({
-//       position: Cesium.Cartesian3.fromDegrees(lon, lat),
-//       point: {
-//         pixelSize: pixelSize,
-//         color: color,
-//         outlineColor: Cesium.Color.BLACK,
-//         outlineWidth: 1
-//       },
-//       name: p["Location"],
-//       description: buildDescription(p)
-//     });
   });
 
-
-
-//   viewer.zoomTo(viewer.entities);
 }
 
 // ----------------------
 // Popup content
 // ----------------------
 function buildDescription(p) {
+    const url = p["Project or Data URL"];
   return `
     <b>Category:</b> ${p["Color (Category)"]}<br/>
     <b>Size:</b> ${p["Size (Quantity)"]}<br/>
     <b>Start Year:</b> ${p["Start Year"] || "—"}<br/>
     <b>End Year:</b> ${p["End Year"] || "—"}<br/><br/>
     ${p["Project"] || ""}
+    ${url ? `<b>Link:</b> <a href="${url}" target="_blank" rel="noopener">${url}</a><br/><br/>` : ""}
   `;
 }
 

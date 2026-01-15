@@ -7,6 +7,7 @@
   <!-- CesiumJS -->
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.114/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <!-- <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script> -->
 
 
@@ -88,6 +89,18 @@
         height: 10px;
         border-radius: 50%; */
     }
+
+    #footer {
+        position: absolute;
+        bottom: 10px;
+        left: 33px;
+        font-family: Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+        color: #333;
+        pointer-events: none;
+        font-size: 8px;
+        z-index: 999;
+        text-align: left; 
+    }
     
     .cesium-infoBox-toolbar {
         display: none !important;
@@ -126,6 +139,10 @@
         border: 1px solid #ccc;
     }
 
+    .cesium-widget-credits{
+        display:none !important;
+    }
+
 
   </style>
 </head>
@@ -143,6 +160,10 @@
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="main.js"></script>
+
+  <div id="footer">
+    Built with CesiumJS and with Carto: carto.com/.
+  </div>
 
 </body>
 </html>
